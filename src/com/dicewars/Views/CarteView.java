@@ -1,10 +1,10 @@
 package com.dicewars.Views;
 
 import com.dicewars.Controllers.PartieController;
-import com.dicewars.Models.CarteModel;
-import com.dicewars.Models.Coordonnee;
-import com.dicewars.Models.PartieModel;
-import com.dicewars.Models.TerritoireModel;
+import com.dicewars.Models.MapModel;
+import com.dicewars.Models.CoordinateModel;
+import com.dicewars.Models.GameModel;
+import com.dicewars.Models.TerritoryModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +14,8 @@ import java.util.ArrayList;
 
 
 public class CarteView extends JPanel implements MouseListener {
-    private final CarteModel carteModel;
-    private final PartieModel partieModel;
+    private final MapModel mapModel;
+    private final GameModel gameModel;
 
     private int carteWidth;
     private int carteHeight;
@@ -24,18 +24,18 @@ public class CarteView extends JPanel implements MouseListener {
 
     private PartieController bind;
 
-    public CarteView(PartieModel partieModel) {
+    public CarteView(GameModel gameModel) {
         super();
-        this.partieModel = partieModel;
-        this.carteModel = partieModel.getMap();
+        this.gameModel = gameModel;
+        this.mapModel = gameModel.getMap();
         addMouseListener(this);
     }
 
     private void drawTerritories(Graphics2D graphics2D) {
         graphics2D.setStroke(new BasicStroke(1));
 
-        for (ArrayList<Coordonnee> iter : carteModel.getComposants()) {
-            for (Coordonnee composant : iter) {
+        for (ArrayList<CoordinateModel> iter : mapModel.getComposants()) {
+            for (CoordinateModel composant : iter) {
                 graphics2D.setColor(new Color(composant.getParent().getPlayer().getColor()));
                 graphics2D.fillRect(composant.getX() * spacingHor, composant.getY() * spacingVert, spacingHor, spacingVert);
             }
@@ -46,16 +46,16 @@ public class CarteView extends JPanel implements MouseListener {
         graphics2D.setStroke(new BasicStroke(4));
         graphics2D.setColor(Color.BLACK);
 
-        for (ArrayList<Coordonnee> iter : carteModel.getComposants()) {
-            for (Coordonnee composant : iter) {
+        for (ArrayList<CoordinateModel> iter : mapModel.getComposants()) {
+            for (CoordinateModel composant : iter) {
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX()).get(composant.getY() - 1).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX()).get(composant.getY() - 1).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor, composant.getY() * spacingVert, composant.getX() * spacingHor + spacingHor, composant.getY() * spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX() - 1).get(composant.getY()).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX() - 1).get(composant.getY()).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor, composant.getY() * spacingVert, composant.getX() * spacingHor, composant.getY() * spacingVert + spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
@@ -65,29 +65,29 @@ public class CarteView extends JPanel implements MouseListener {
         }
 
         // Bordure si territoire désigné comme attaquant
-        if (partieModel.getAttacking() != null) {
+        if (gameModel.getAttacking() != null) {
             graphics2D.setColor(Color.ORANGE);
-            for (Coordonnee composant : partieModel.getAttacking().getComposants()) {
+            for (CoordinateModel composant : gameModel.getAttacking().getComposants()) {
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX()).get(composant.getY() - 1).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX()).get(composant.getY() - 1).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor, composant.getY() * spacingVert, composant.getX() * spacingHor + spacingHor, composant.getY() * spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX()).get(composant.getY() + 1).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX()).get(composant.getY() + 1).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor, composant.getY() * spacingVert + spacingVert, composant.getX() * spacingHor + spacingHor, composant.getY() * spacingVert + spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX() - 1).get(composant.getY()).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX() - 1).get(composant.getY()).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor, composant.getY() * spacingVert, composant.getX() * spacingHor, composant.getY() * spacingVert + spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
                 }
                 try {
-                    if (composant.getParent() != carteModel.getComposants().get(composant.getX() + 1).get(composant.getY()).getParent()) {
+                    if (composant.getParent() != mapModel.getComposants().get(composant.getX() + 1).get(composant.getY()).getParent()) {
                         graphics2D.drawLine(composant.getX() * spacingHor + spacingHor, composant.getY() * spacingVert, composant.getX() * spacingHor + spacingHor, composant.getY() * spacingVert + spacingVert);
                     }
                 } catch (IndexOutOfBoundsException ignored) {
@@ -107,15 +107,15 @@ public class CarteView extends JPanel implements MouseListener {
     }
 
     private void drawTerritoryStrenght(Graphics2D graphics2D) {
-        for (TerritoireModel territoireModel : carteModel.getTerritoires()) {
-            Coordonnee capitale = territoireModel.getCapitale();
-            Color bg = new Color(territoireModel.getPlayer().getColor());
+        for (TerritoryModel territoryModel : mapModel.getTerritoires()) {
+            CoordinateModel capitale = territoryModel.getCapitale();
+            Color bg = new Color(territoryModel.getPlayer().getColor());
             if (GuiView.displayBlackBackground(bg)) {
                 graphics2D.setColor(Color.BLACK);
             } else {
                 graphics2D.setColor(Color.WHITE);
             }
-            graphics2D.drawString(String.valueOf(territoireModel.getDice()), capitale.getX() * spacingHor + 10, capitale.getY() * spacingVert + 20);
+            graphics2D.drawString(String.valueOf(territoryModel.getDice()), capitale.getX() * spacingHor + 10, capitale.getY() * spacingVert + 20);
         }
     }
 
@@ -141,8 +141,8 @@ public class CarteView extends JPanel implements MouseListener {
         carteWidth = dimension.width - insets.left - insets.right;
         carteHeight = dimension.height - insets.top - insets.bottom;
 
-        spacingVert = carteWidth / carteModel.getNombreComposants();
-        spacingHor = carteHeight / carteModel.getNombreComposants();
+        spacingVert = carteWidth / mapModel.getNombreComposants();
+        spacingHor = carteHeight / mapModel.getNombreComposants();
     }
 
     @Override
@@ -160,7 +160,7 @@ public class CarteView extends JPanel implements MouseListener {
         int x = e.getX() / spacingHor;
         int y = e.getY() / spacingVert;
 
-        bind.territoryClicked(carteModel.getComposants().get(x).get(y).getParent());
+        bind.territoryClicked(mapModel.getComposants().get(x).get(y).getParent());
     }
 
     @Override

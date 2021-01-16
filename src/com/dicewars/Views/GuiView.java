@@ -2,25 +2,21 @@ package com.dicewars.Views;
 
 import com.dicewars.Controllers.PartieController;
 import com.dicewars.Controllers.WindowController;
-import com.dicewars.Models.PartieModel;
+import com.dicewars.Models.GameModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
 public class GuiView {
-    private final WindowController windowController;
     private final JPanel topGui = new JPanel();
     private final JPanel bottomGui = new JPanel();
-    private PartieModel partieModel;
     private PartieController partieController;
     private final JLabel currentPlayerTurn = new JLabel("");
     private final JLabel warningMessage = new JLabel("");
     private final JLabel infoMessage = new JLabel("");
 
-    public GuiView(PartieModel partieModel, WindowController windowController) {
-        this.partieModel = partieModel;
-        this.windowController = windowController;
+    public GuiView(GameModel gameModel, WindowController windowController) {
 
         topGui.setLayout(new FlowLayout());
         bottomGui.setLayout(new BoxLayout(bottomGui, BoxLayout.PAGE_AXIS));
@@ -53,7 +49,7 @@ public class GuiView {
         JButton endTurnButton = new JButton("Finir son tour");
         endTurnButton.addActionListener(e -> {
             partieController.endTurn();
-            setInfoMessage("Fin du tour. Vous gagnez " + partieModel.getCurrentPlayer().mostAdjascentTeritories() + " dés.");
+            setInfoMessage("Fin du tour. Vous gagnez " + gameModel.getCurrentPlayer().mostAdjascentTeritories() + " dés.");
         });
         lowerButtons.add(endTurnButton);
 

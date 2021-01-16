@@ -3,31 +3,31 @@ package com.dicewars.Models;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class TerritoireModel {
+public class TerritoryModel {
     private final int id;
-    private final ArrayList<Coordonnee> composants;
-    private final HashSet<TerritoireModel> voisins = new HashSet<>();
-    private final Coordonnee capitale;
+    private final ArrayList<CoordinateModel> composants;
+    private final HashSet<TerritoryModel> voisins = new HashSet<>();
+    private final CoordinateModel capitale;
     private PlayerModel playerModel;
     private int dice = 1; // Chaque territoire a un dé par défaut
 
-    public TerritoireModel(int id, HashSet<Coordonnee> composants) {
+    public TerritoryModel(int id, HashSet<CoordinateModel> composants) {
         this.id = id;
 
         // Copie superficielle des coordonnées des cases qui composent le territoire car on veut pouvoir itérer toutes les composantes depuis l'extérieur
-        this.composants = new ArrayList<Coordonnee>(composants); // Cast du hashset plus optimisé lors de la génération vers un Arraylist plus optimisé pour l'accès séquentiel
-        this.composants.forEach((coordonnee) -> {
-            coordonnee.setParent(this);
+        this.composants = new ArrayList<CoordinateModel>(composants); // Cast du hashset plus optimisé lors de la génération vers un Arraylist plus optimisé pour l'accès séquentiel
+        this.composants.forEach((coordinateModel) -> {
+            coordinateModel.setParent(this);
         });
 
         this.capitale = this.composants.get(0);
     }
 
-    public Coordonnee getCapitale() {
+    public CoordinateModel getCapitale() {
         return capitale;
     }
 
-    public void addVoisin(TerritoireModel voisin) {
+    public void addVoisin(TerritoryModel voisin) {
         if (voisin != this) {
             voisins.add(voisin);
         }
@@ -83,21 +83,21 @@ public class TerritoireModel {
         this.dice = dice;
     }
 
-    public ArrayList<Coordonnee> getComposants() {
-        ArrayList<Coordonnee> new_list = new ArrayList<>(composants.size());
-        for (Coordonnee coordonnee : composants) {
-            new_list.add(coordonnee.clone());
+    public ArrayList<CoordinateModel> getComposants() {
+        ArrayList<CoordinateModel> new_list = new ArrayList<>(composants.size());
+        for (CoordinateModel coordinateModel : composants) {
+            new_list.add(coordinateModel.clone());
         }
         return new_list;
     }
 
-    public HashSet<TerritoireModel> getVoisins() {
-        return (HashSet<TerritoireModel>) voisins.clone();
+    public HashSet<TerritoryModel> getVoisins() {
+        return (HashSet<TerritoryModel>) voisins.clone();
     }
 
     public boolean hasEnemyNear() {
-        for (TerritoireModel territoireModel : voisins) {
-            if (territoireModel.getPlayer() != playerModel) {
+        for (TerritoryModel territoryModel : voisins) {
+            if (territoryModel.getPlayer() != playerModel) {
                 return true;
             }
         }

@@ -6,6 +6,7 @@ import com.dicewars.Models.WindowModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class WindowView {
@@ -97,22 +98,41 @@ public class WindowView {
         gameLaunchButtons.setBorder(BorderFactory.createEmptyBorder(0, 0, 40, 0));
         titleScreenPane.add(gameLaunchButtons);
 
-        JButton startGame = new JButton("Commencer à jouer");
+        JButton startGame = new JButton("Génération aléatoire");
         startGame.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parent.startGame(nombreDeplayers, 5 * nombreDeplayers);
+                try {
+                    parent.startGame(nombreDeplayers, 5 * nombreDeplayers, false);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
             }
         });
         gameLaunchButtons.add(startGame);
-        /* PAS IMPLEMENTE
         JLabel ouLabel = new JLabel("OU");
         ouLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         ouLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         gameLaunchButtons.add(ouLabel);
         // Chargement d'une sauvegarde
+        JButton fromCSV = new JButton("A partir d'un CSV");
+        fromCSV.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    parent.startGame(nombreDeplayers, 5 * nombreDeplayers, true);
+                } catch (FileNotFoundException fileNotFoundException) {
+                    fileNotFoundException.printStackTrace();
+                }
+            }
+        });
+        gameLaunchButtons.add(fromCSV);
+        ouLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        ouLabel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
+        gameLaunchButtons.add(ouLabel);
+        // Chargement d'une sauvegarde
         JButton loadGame = new JButton("Charger une partie");
-        gameLaunchButtons.add(loadGame);*/
+        gameLaunchButtons.add(loadGame);
     }
 
     private void createGameScreen() {

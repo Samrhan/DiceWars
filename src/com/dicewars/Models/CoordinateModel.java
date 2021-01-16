@@ -1,12 +1,12 @@
 package com.dicewars.Models;
 
-public class Coordonnee implements Cloneable {
+public class CoordinateModel implements Cloneable {
     private final int x;
     private final int y;
-    private TerritoireModel parent = null;
+    private TerritoryModel parent = null;
     private boolean free = true;
 
-    public Coordonnee(int x, int y) {
+    public CoordinateModel(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -19,11 +19,11 @@ public class Coordonnee implements Cloneable {
         return y;
     }
 
-    public TerritoireModel getParent() {
+    public TerritoryModel getParent() {
         return this.parent;
     }
 
-    public void setParent(TerritoireModel parent) {
+    public void setParent(TerritoryModel parent) {
         this.parent = parent;
         this.free = false;
     }
@@ -36,9 +36,9 @@ public class Coordonnee implements Cloneable {
         free = false;
     }
 
-    public Coordonnee clone() {
+    public CoordinateModel clone() {
         try {
-            return (Coordonnee) super.clone();
+            return (CoordinateModel) super.clone();
         } catch (CloneNotSupportedException ignored) {
         }
         return null;

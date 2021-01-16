@@ -1,42 +1,42 @@
 package com.dicewars.Controllers;
 
 import com.dicewars.Models.PlayerModel;
-import com.dicewars.Models.PartieModel;
-import com.dicewars.Models.TerritoireModel;
+import com.dicewars.Models.GameModel;
+import com.dicewars.Models.TerritoryModel;
 import com.dicewars.Views.GuiView;
 
 public class PartieController {
-    private final PartieModel partieModel;
+    private final GameModel gameModel;
     private final GuiView guiView;
     private final CarteController carteController;
     private final WindowController windowController;
 
-    public PartieController(PartieModel partieModel, GuiView guiView, CarteController carteController, WindowController windowController) {
-        this.partieModel = partieModel;
+    public PartieController(GameModel gameModel, GuiView guiView, CarteController carteController, WindowController windowController) {
+        this.gameModel = gameModel;
         this.guiView = guiView;
         this.carteController = carteController;
         this.windowController = windowController;
     }
 
-    public void territoryClicked(TerritoireModel territoireModel) {
+    public void territoryClicked(TerritoryModel territoryModel) {
         guiView.hideWarningMessage();
         guiView.hideInfoMessage();
-        if (territoireModel.getPlayer() == partieModel.getCurrentPlayer()) {
-            if (territoireModel.getDice() <= 1) {
+        if (territoryModel.getPlayer() == gameModel.getCurrentPlayer()) {
+            if (territoryModel.getDice() <= 1) {
                 guiView.setWarningMessage("Ce territoire n'a pas assez de force pour attaquer, sélection impossible");
             } else {
-                partieModel.setAttacking(territoireModel);
+                gameModel.setAttacking(territoryModel);
                 carteController.refresh();
             }
-        } else if (partieModel.getAttacked() == null
-                && partieModel.getAttacking() != null
-                && territoireModel.getPlayer() != partieModel.getCurrentPlayer()) {
-            partieModel.setAttacked(territoireModel);
+        } else if (gameModel.getAttacked() == null
+                && gameModel.getAttacking() != null
+                && territoryModel.getPlayer() != gameModel.getCurrentPlayer()) {
+            gameModel.setAttacked(territoryModel);
 
             try {
-                partieModel.getCurrentPlayer().attaquerTerritoire(partieModel.getAttacking(), partieModel.getAttacked());
-                if (partieModel.getCurrentPlayer().cannotAttack()) {
-                    guiView.setInfoMessage("Vous ne pouvez plus attaquer, fin du tour. Vous gagnez " + partieModel.getCurrentPlayer().mostAdjascentTeritories() + " dés.");
+                gameModel.getCurrentPlayer().attaquerTerritoire(gameModel.getAttacking(), gameModel.getAttacked());
+                if (gameModel.getCurrentPlayer().cannotAttack()) {
+                    guiView.setInfoMessage("Vous ne pouvez plus attaquer, fin du tour. Vous gagnez " + gameModel.getCurrentPlayer().mostAdjascentTeritories() + " dés.");
                     endTurn();
                 }
             } catch (PlayerModel.CannotAttackOwnTerritory ignored) {
@@ -48,26 +48,26 @@ public class PartieController {
             } catch (PlayerModel.NotEnoughForce ignored) {
                 guiView.setWarningMessage("Le territoire attaquant n'a pas assez de force");
             } finally {
-                partieModel.resetSelectedTerritories();
+                gameModel.resetSelectedTerritories();
                 carteController.refresh();
-                guiView.setCurrentPlayerTurn(partieModel.getCurrentPlayerId(), partieModel.getCurrentPlayer().getColor());
+                guiView.setCurrentPlayerTurn(gameModel.getCurrentPlayerId(), gameModel.getCurrentPlayer().getColor());
             }
         }
     }
 
     public void checkEndGame() {
-        if (!partieModel.moreThanOnePlayerAlive()) {
-            windowController.displayEndScreen(partieModel.getCurrentPlayerId() + 1);
+        if (!gameModel.moreThanOnePlayerAlive()) {
+            windowController.displayEndScreen(gameModel.getCurrentPlayerId() + 1);
         }
     }
 
     public void endTurn() {
         checkEndGame();
 
-        partieModel.resetSelectedTerritories();
-        partieModel.getCurrentPlayer().terminerTour();
-        partieModel.incrementCurrentPlayer();
-        guiView.setCurrentPlayerTurn(partieModel.getCurrentPlayerId(), partieModel.getCurrentPlayer().getColor());
+        gameModel.resetSelectedTerritories();
+        gameModel.getCurrentPlayer().terminerTour();
+        gameModel.incrementCurrentPlayer();
+        guiView.setCurrentPlayerTurn(gameModel.getCurrentPlayerId(), gameModel.getCurrentPlayer().getColor());
 
         guiView.refresh();
         carteController.refresh();

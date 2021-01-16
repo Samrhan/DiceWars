@@ -1,14 +1,14 @@
 package com.dicewars.Controllers;
 
-import com.dicewars.Models.CarteModel;
+import com.dicewars.Models.MapModel;
 import com.dicewars.Views.CarteView;
 
 public class CarteController {
-    private CarteModel carteModel;
+    private MapModel mapModel;
     private CarteView carteView;
 
-    public CarteController(CarteModel carteModel, CarteView carteView) {
-        this.carteModel = carteModel;
+    public CarteController(MapModel mapModel, CarteView carteView) {
+        this.mapModel = mapModel;
         this.carteView = carteView;
     }
 
